@@ -1,17 +1,21 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Make the directory where the fonts are gonna be installed
-mkdir -p /usr/share/fonts/OTF
+mkdir -p /usr/share/fonts/{OTF,TTF}
 cd /usr/share/fonts/OTF || return 
 
-# Grabbing Fira Mono Nerd Font
-wget -O JetBrainsMono.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.0/JetBrainsMono.zip
+# Grabbing JetBrainsMono Nerd Font
+wget -qO JetBrainsMono.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.0/JetBrainsMono.zip
 
-# Setting Fira Mono Nerd Font up
+# Setting JetBrainsMono Nerd Font up
 unzip -qq JetBrainsMono.zip
 rm -f readme.md
 rm -f LICENSE
 rm -f JetBrainsMono.zip
+
+# Grabbing MDI
+cd /usr/share/fonts/TTF || return
+wget -qO MaterialDesignIcons.ttf https://github.com/Templarian/MaterialDesign-Font/raw/master/MaterialDesignIconsDesktop.ttf
 
 # Reload cache
 fc-cache -vf
