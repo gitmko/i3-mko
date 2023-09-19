@@ -16,6 +16,11 @@ My i3wm Configuration *optionally* including [nvim-mko](https://github.com/gitmk
 
 Installation is done using my very own [dotfiles-installer](https://github.com/gitmko/dotfiles-installer).
 
+You need [gum](https://github.com/charmbracelet/gum) installed for the script to work.
+
+Find out how to install gum in the dotfiles-installer repo in the [installation](https://github.com/gitmko/dotfiles-installer#Installation) guide.
+
+
 ```
 git clone https://github.com/gitmko/dotfiles-installer
 cd dotfiles-installer/scripts

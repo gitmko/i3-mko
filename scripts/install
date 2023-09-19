@@ -21,7 +21,7 @@ if [[ $oscheck == "arch" ]]; then
 
         # Dependency installation
         pacman -Syyu --needed base-devel pacman-contrib cargo --noconfirm
-        pacman -S picom lxappearance polkit-gnome volumeicon dunst feh thunar kitty rofi xorg xorg-xinit flameshot wget --noconfirm
+        pacman -S picom lxappearance polkit-gnome volumeicon network-manager-applet dunst feh thunar kitty rofi xorg xorg-xinit flameshot wget --noconfirm
 
                 # Installing the yay AUR helper
                 gum spin --spinner.foreground '#CBA6F7' --spinner line --title "Installing $(gum style --bold --foreground '#CBA6F7' 'Amethyst')..." -- sleep 5
