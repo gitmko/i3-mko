@@ -8,9 +8,9 @@ My i3wm Configuration *optionally* including [nvim-mko](https://github.com/gitmk
 ![image](images/i3-desktop-nvim.png)
 
 ## Distros supported:
-    - [x] Arch 
-    - [x] Debian 
-    - [x] Fedora 
+- [x] Arch 
+- [x] Debian 
+- [x] Fedora 
 
 ## Installation
 
