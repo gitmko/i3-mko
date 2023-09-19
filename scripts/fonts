@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Make the directory where the fonts are gonna be installed
+mkdir -p /usr/share/fonts/OTF
+cd /usr/share/fonts/OTF || return 
+
+# Grabbing Fira Mono Nerd Font
+wget -O JetBrainsMono.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.0/JetBrainsMono.zip
+
+# Setting Fira Mono Nerd Font up
+unzip -qq JetBrainsMono.zip
+rm -f readme.md
+rm -f LICENSE
+rm -f JetBrainsMono.zip
+
+# Reload cache
+fc-cache -vf
+
+echo "$(gum style --bold 'Fonts') installed!"

@@ -1,0 +1,55 @@
+#!/bin/bash
+
+username=$(id -u -n 1000)
+config=/home/"$username"/.config
+home=/home/"$username"
+viminstall=$(nvim -v)
+oscheck=$(grep -Po "(?<=^ID=).+" /etc/os-release | sed 's/"//g')
+
+echo "Do you want to install $(gum style --bold --foreground '#CBA6F8' 'nvim-mko')?"
+
+CHOICE=$(gum choose "Yes" "No")
+
+if [[ "$CHOICE" == "Yes" ]]; then
+
+    gum spin --spinner.foreground '#CBA6F8' --spinner line --title "Installing $(gum style --bold --foreground '#CBA6F8' 'nvim-mko')" -- sleep 8
+
+    if [[ "$viminstall" ]]; then
+
+        git clone https://github.com/gitmko/nvim-mko "$config"/nvim
+        echo "$(gum style --bold --foreground '#CBA6F8' 'nvim-mko') has been installed!."
+
+    elif [[ -e "$viminstall" ]]; then
+
+        if [[ "$oscheck" == "arch" ]]; then
+
+            ame -S neovim python-pynvim --noconfirm
+            git clone -q https://github.com/gitmko/nvim-mko "$config"/nvim
+            echo "$(gum style --bold --foreground '#CBA6F8' 'nvim-mko') has been installed!."
+
+        elif [[ "$oscheck" == "fedora" ]]; then
+
+            dnf install neovim python3-neovim -y            
+            git clone -q https://github.com/gitmko/nvim-mko "$config"/nvim
+            echo "$(gum style --bold --foreground '#CBA6F8' 'nvim-mko') has been installed!." 
+
+        elif [[ "$oscheck" == "debian" ]]; then
+
+            # building neovim from source, hooray.
+            git clone -q https://github.com/neovim/neovim "$home"/neovim
+            cd "$home"/neovim && make CMAKE_BUILD_TYPE=RelWithDebInfo
+            git checkout -q stable
+            cd build && cpack -G DEB && sudo dpkg -i nvim-linux64.deb
+
+            git clone -q https://github.com/gitmko/nvim-mko "$config"/nvim
+            echo "$(gum style --bold --foreground '#CBA6F8' 'nvim-mko') has been installed!."
+
+        fi
+
+    fi
+
+elif [[ "$CHOICE" == "No" ]]; then
+
+    echo "Okay, I will not install $(gum style --bold --foreground '#CBA6F8' 'nvim-mko')."
+
+fi

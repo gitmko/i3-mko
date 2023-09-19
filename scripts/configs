@@ -1,0 +1,24 @@
+#!/bin/bash
+
+clear
+
+username=$(id -u -n 1000)
+home=/home/"$username"
+builddir=/home/"$username"/dotfiles
+
+# Cool spinner hehe
+gum spin --spinner.foreground '#0f94d2' --spinner line --title "Copying $(gum style --bold --foreground '#0f94d2' 'configurations')..." -- sleep 7
+
+# Copying coonfiguration
+mkdir -p "$home"/.config
+cp -r "$builddir"/configs/{i3,i3status,kitty,neofetch,picom,rofi,Thunar,volumeicon} "$home"/.config/
+
+# Changing ownership of configuration files, to make them editable.
+chown "$username":"$username" "$home"/.config
+chown "$username":"$username" "$home"/.config/*
+
+clear
+
+echo "$(gum style --bold --foreground '#4C7197' "Configurations") copied!"
+sleep 2
+

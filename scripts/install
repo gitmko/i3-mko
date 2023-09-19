@@ -1,0 +1,98 @@
+#!/bin/bash
+
+if [ "$EUID" != 0 ]; then
+    echo "Enter your sudo password"
+    sudo "$0" "$@"
+    exit $?
+fi
+
+username=$(id -u -n 1000)
+home=/home/"$username"
+builddir=/home/"$username"/dotfiles
+oscheck=$(grep -Po "(?<=^ID=).+" /etc/os-release | sed 's/"//g')
+
+if [[ $oscheck == "arch" ]]; then 
+        # Exporting gum colors for arch
+        export GUM_CHOOSE_CURSOR_FOREGROUND="#0f94d2"
+        export FOREGROUND="#0f94d2"
+
+        # Printing distro check
+        echo "Detected distro: $(gum style --bold 'Arch')"	
+
+        # Dependency installation
+        pacman -Syyu --needed base-devel pacman-contrib cargo --noconfirm
+        pacman -S picom lxappearance polkit-gnome volumeicon dunst feh thunar kitty rofi xorg xorg-xinit flameshot wget --noconfirm
+
+                # Installing the yay AUR helper
+                gum spin --spinner.foreground '#CBA6F7' --spinner line --title "Installing $(gum style --bold --foreground '#CBA6F7' 'Amethyst')..." -- sleep 5
+                bash ./scripts/aur-install
+                echo "$(gum style --bold --foreground '#CBA6F7' 'Amethyst') installed"
+
+                # Installing Brave Browser
+                gum spin --spinner.foreground '#FF5400' --spinner line --title "Installing $(gum style --bold --foreground '#FF5400' 'Brave')..." -- sleep 7
+                ame -S brave-bin --noconfirm
+                ln -sf /usr/bin/brave /usr/bin/brave-browser # thanks to claire for this idea, adds compatibility between distributions 
+                echo "$(gum style --bold --foreground '#FF5400' 'Brave Browser') has been installed"
+
+elif [[ $oscheck == "debian" ]]; then
+        # Printing distro check
+        echo "################ Detected distro: Debian ################"
+
+        # Dependency installation
+        apt install nala -y
+
+        echo "################ Nala has been installed! (thank me later) ################"
+
+        nala install picom ninja-build gettext cmake lxappearance policykit-1-gnome volumeicon-alsa feh dunst pcmanfm kitty suckless-tools rofi make gcc xorg unzip zip flameshot -y
+
+        # Brave
+        curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+        nala update ; nala install brave-browser -y
+        echo "################ Brave Browser installed ################"
+
+elif [[ $oscheck == "fedora" ]]; then
+        # Printing distro check
+        echo "################ Detected distro: Fedora ################"
+
+        # Installing dependencies
+        dnf install dnf-plugins-core xrandr xsetroot picom lxappearance polkit-gnome volumeicon feh dunst pcmanfm kitty dmenu rofi make gcc libX11-devel libXft-devel libXinerama-devel libXrandr-devel xorg-x11-xinit-session unzip zip google-roboto-fonts flameshot -y
+
+        # Brave
+        dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.rep
+        rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+        dnf update ; dnf install brave-browser brave-keyring -y
+        echo "################ Brave Browser installed ################"
+
+else
+        echo "This install script only supports Arch, Fedora and Debian, if you want more distros, make a PR/issue on the github."
+        exit 1
+fi
+
+# Copying configuration files
+bash "$builddir"/scripts/configs
+# cp -r "$builddir"/configs/kitty /home/"$username"/.config/
+# chown "$username":"$username" /home/"$username"/.config
+# chown "$username":"$username" /home/"$username"/.config/kitty
+
+# Adding i3 to .xinitrc
+echo "exec i3" > "$home"/.xinitrc
+chown "$username":"$username" "$home"/.xinitrc 
+
+# Wallpaper
+bash "$builddir"/scripts/wallpaper
+
+# Download Catppuccin Theme and folders
+bash "$builddir"/scripts/themes
+
+# Installing fonts
+bash "$builddir"/scripts/fonts
+
+# Installing nvim-mko
+bash "$builddir"/scripts/nvim-installer
+
+# Installing tmux-mko
+# bash "$builddir"/scripts/tmux-installer
+
+# Confirm that we're done
+echo "$(gum style --bold --foreground '#CBA6F8' 'i3-mko') has been installed!"

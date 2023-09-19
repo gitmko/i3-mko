@@ -1,0 +1,26 @@
+#!/bin/bash
+
+oscheck=$(grep -Po "(?<=^ID=).+" /etc/os-release | sed 's/"//g')
+
+if [[ $oscheck == "arch" ]]; then
+    gum spin --spinner.foreground '#CBA6F7' --spinner line --title "Installing $(gum style --bold --foreground '#CBA6F7' 'Catppuccin') GTK theme..." -- sleep 5
+    ame -S catppuccin-gtk-theme-mocha --noconfirm
+else
+    wget -O /usr/share/themes/Catppuccin-Mocha.zip https://github.com/catppuccin/gtk/releases/download/v0.6.1/Catppuccin-Mocha-Standard-Blue-dark.zip
+    unzip -qq /usr/share/themes/Catppuccin-Mocha.zip
+    rm -r /usr/share/themes/Catppuccin-Mocha.zip
+fi
+
+### Icons
+# Installing Papirus Icons
+wget -qO- https://git.io/papirus-icon-theme-install | sh
+
+echo "Installing icons..."
+cp -f Icons/64x64/* /usr/share/icons/Papirus/64x64/places
+cp -f Icons/48x48/* /usr/share/icons/Papirus/48x48/places
+cp -f Icons/32x32/* /usr/share/icons/Papirus/32x32/places
+cp -f Icons/24x24/* /usr/share/icons/Papirus/24x24/places
+cp -f Icons/22x22/* /usr/share/icons/Papirus/22x22/places
+
+echo "Papirus-Icons have been installed!"
+

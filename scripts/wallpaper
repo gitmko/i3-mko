@@ -1,0 +1,18 @@
+#!/bin/bash
+
+username=$(id -u -n 1000)
+fehbg=/home/$username/.fehbg
+home=/home/"$username"
+
+if [[ -e "$fehbg" ]]; then
+    mkdir -p "$home"/Pictures
+    wget -O "$home"/Pictures/wallpaper.png https://images8.alphacoders.com/132/1328086.png
+    mv "$home"/.fehbg "$home"/.fehbg.bak
+    echo -e '#!/bin/sh\n# https://github.com/gitmko/i3-mko\n\nusername=$(id -u -n 1000)\nhome=/home/"$username"\n\nfeh --no-fehbg --bg-fill $home/Pictures/wallpaper.png' > "$home"/.fehbg
+    chown "$username":"$username" "$home"/.fehbg
+else
+    mkdir -p "$home"/Pictures
+    wget -O "$home"/Pictures/wallpaper.png https://images8.alphacoders.com/132/1328086.png
+    echo -e '#!/bin/sh\n# https://github.com/gitmko/i3-mko\n\nusername=$(id -u -n 1000)\nhome=/home/"$username"\n\nfeh --no-fehbg --bg-fill $home/Pictures/wallpaper.png' > "$home"/.fehbg
+    chown "$username":"$username" "$home"/.fehbg
+fi

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+username=$(id -u -n 1000)
+home=/home/"$username"
+
+mkdir "$home"
+git clone https://aur.archlinux.org/ame.git "$home"/ame
+cd "$home"/ame || return
+makepkg -si
+rm -rf "$home"/ame
